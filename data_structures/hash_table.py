@@ -1,6 +1,3 @@
-from mimetypes import init
-
-
 class HashTable:
     """ Hashtable built using djb2 and double hashing.
     
@@ -43,8 +40,18 @@ class HashTable:
 
 
     def insert(self, key, value):
-        index = self.find_index(key)
-        pass
+        index, does_exist = self._find_index(key)
+        
+        # table is full
+        if index == -1:
+            return
+
+        # The key already exists
+        if does_exist:
+            self.table[index][1] = value
+            return
+        
+        self.table[index] = [key, value]
 
     def search(self, key):
         pass
@@ -54,4 +61,5 @@ class HashTable:
 
 
 if __name__ == "__main__":
-    pass
+    h1 = HashTable(8)
+    h1.insert('key1', 'chicken')
