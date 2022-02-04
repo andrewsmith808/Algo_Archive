@@ -1,6 +1,6 @@
 class HashTable:
     """ Hashtable built using double hashing."""
-    
+
     def __init__(self, table_length):
         self.table = [None] * table_length
 
@@ -12,26 +12,21 @@ class HashTable:
 
     
     def _find_index(self, key):
-        """Hash function using built in hash and Double Hashing for Collisions.
-        Parameters:
-            key -- the value to be hashed
-        
-        Return:
-            tuple -- (index, bool for wether it exists in the table or not)
-        """
-
         hash1 = hash(key)
         table_length = len(self.table)
         initial_index = hash1 % table_length
 
         if not self.table[initial_index]:
             return (initial_index, False)
+        
+        elif self.table[initial_index] == 'REDACTED':
+            return (initial_index, True)
 
         elif self.table[initial_index][0] == key:
             return (initial_index, True) 
         
         # There exists a collision!
-        hash2 = hash(key + 'yuz')
+        hash2 = hash(key + 'd')
         move_amount = hash2 % (table_length - 1) + 1
         index = (initial_index + move_amount) % table_length
 
@@ -40,7 +35,10 @@ class HashTable:
             if not self.table[index]:
                 return (index, False)
 
-            elif self.table[index] == key:
+            elif self.table[initial_index] == 'REDACTED':
+                return (initial_index, True)
+
+            elif self.table[index][0] == key:
                 return (index, True)
 
             else:
@@ -50,15 +48,6 @@ class HashTable:
 
 
     def insert(self, key, value):
-        """
-            Add element to the list, if full do nothing
-
-            parameters:
-                key, value -- pair to be added to list
-            
-            Return -- None
-        """
-
         index, does_exist = self._find_index(key)
         
         # table is full
@@ -84,8 +73,19 @@ class HashTable:
         
         return self.table[index][1]
 
-    def delete(self, key):
+    def remove(self, key):
+        index, does_exist = self._find_index(key)
+
+        if not does_exist:
+            return
+
+        # cannot delete in double hashing
+        # used a reserved word instead to mean removed!
+        if does_exist:
+            self.table[index][0] = 'REDACTED'
+            self.table[index][1] = 'REDACTED'
         pass
+
 
 
 if __name__ == "__main__":
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     ht.insert('key2', 2)
     ht.insert('key3', 10)
     ht.insert('key4', 100)
-    assert not ht.search('key5') # Since this key doesn't exist yet, it should return False.
+    assert not ht.search('key5')
     ht.insert('key5', 10)
 
     assert ht.search('key1') == 9
@@ -102,5 +102,15 @@ if __name__ == "__main__":
     assert ht.search('key3') == 10
     assert ht.search('key4') == 100
     assert ht.search('key5') == 10
-    assert not ht.search('key6') # Since this key doesn't exist, it should return False.
+    assert not ht.search('key6')
 
+    ht.remove('key1')
+    ht.remove('key2')
+    ht.remove('key3')
+    ht.remove('key4')
+
+    assert not ht.search('key1')
+    assert not ht.search('key2')
+    assert not ht.search('key3')
+    assert not ht.search('key4')
+    assert ht.search('key5') == 10
