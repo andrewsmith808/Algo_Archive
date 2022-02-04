@@ -14,10 +14,6 @@ class HashTable:
     def delete(self, key):
         pass
 
-    def _hash(value):
-        """Djb2 hashing function."""
-        pass
-
 
 if __name__ == "__main__":
     pass
