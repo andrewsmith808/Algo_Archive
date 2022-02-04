@@ -1,2 +1,5 @@
 # Algo_Archive
-Exploring, implementing, and solving problems in Computer Science, Data Structures, Algorithms, and more.
+A slowly developing archive of work related to Data Structures and Algorithms as well as growth in use of programming languages.
+- - -
+
+
